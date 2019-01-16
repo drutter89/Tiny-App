@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Page Title</title>
+</head>
+<body>
+  <h1>EDIT URL?</h1>
+  <form method="POST" action=<%= `/urls/${shortUrl}` %>>
+    <input type=text name='longUrl' value=<%=url.shortUrl%>>
+    <button type=submit>EDIT URL</button>
+  </form>
+</body>
+</html>

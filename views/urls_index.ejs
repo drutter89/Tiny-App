@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp</title>
+  <title>TinyApp!!!</title>
 
 </head>
 <body>
+        <h1><a href="/urls/new">NEW URL</a></h1>
+
     <header>
       <% include partials/_header %>
     </header>
@@ -13,7 +15,12 @@
 
     <ul>
         <% for (var shortUrls in urls) { %>
-            <li><%= shortUrls %> <%= urls[shortUrls] %></li>
+            <li>Key for URL: <%= shortUrls %> and the link to the site is <a href="<%= urls[shortUrls] %>"><%= urls[shortUrls] %></a>
+            
+                <form method="POST" action= "/urls/<%=shortUrls%>/delete"%></form>
+                    <button type="submit">DELETE</button>
+                  </form>
+            </li>
        
     </ul>
     <ul>
