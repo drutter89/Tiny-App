@@ -3,9 +3,11 @@ var morgan = require('morgan')
 var app = express();
 const PORT = 8080;
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser')
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-
+app.use(cookieParser())
 // set morgan
 app.use(morgan('dev'));
 
@@ -21,13 +23,35 @@ function generateRandomString() {
     return newString.slice(0,6);
 }
 
+app.get('/cookies', (req, res) => {
+  console.log('COOKIES', req.cookies)
+
+  res.json(req.cookies)
+})
+
 app.get("/", (req, res) => {
-  res.send("Hello!");
+ let username = req.cookies.username
+ if (username) {
+   let templateVars = {
+     username: username
+   }
+   res.render("urls_index", templateVars)
+ } else {
+   res.redirect("/login")
+ }
+  
 });
 
+app.get("/login", (req, res) => {
+  res.render("login")
+})
 
   app.get("/urls", (req, res) => {
-    let templateVars = { urls: urlDatabase };
+    let templateVars = { 
+      username: req.cookies["username"],
+      urls: urlDatabase 
+    
+    };
     res.render("urls_index", templateVars);
   });
 
@@ -46,6 +70,14 @@ app.get("/", (req, res) => {
     res.redirect("/urls/" + shortUrl);
 
     
+  });
+
+  //remember to use req.body.username to access the username from the
+  //form we are passing in _header.ejs
+  app.post("/login", (req, res) => {
+    console.log(req.cookies);
+    res.cookie('username', req.body.username)
+    res.redirect("/urls")
   });
 
   app.get("/urls/new", (req, res) => {
@@ -103,6 +135,11 @@ app.get('/urls/:id/', function (req, res) {
 
   app.get("/hello", (req, res) => {
     res.send("<html><body>Hello <b>World</b></body></html>\n");
+  });
+
+  app.post('/logout', (req, res) => {
+    res.clearCookie('username', req.body.username)
+    res.redirect('/urls')
   });
 
 app.listen(PORT, () => {

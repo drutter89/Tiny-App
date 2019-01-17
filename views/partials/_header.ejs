@@ -1,4 +1,23 @@
 <header>
 
     <h1>Tiny App</h1>
+    <h1>LOGIN</h1>
+
+    <% if  (username) { %>
+  
+    <h2>You are logged in as <%= username %></h2>
+    <form method="POST" action="/logout">
+    <button type="logout">Logout</button>
+    </form>
+   
+ <% } else { %>
+    <form method="POST" action="/login">
+      <label for="username">Username</label> 
+      <input type="text" name="username" >
+      <label for="password">Password</label>
+      <input type="password" name="password" >
+      <button type="submit">LOGIN</button>
+    </form>
+ <% } %>
+ 
 </header>
