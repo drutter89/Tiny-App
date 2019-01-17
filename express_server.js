@@ -52,11 +52,11 @@ app.get("/", (req, res) => {
     res.render("urls_new");
   });
 
-  app.get("/urls/:id", (req, res) => {
-    let shortUrl = req.params.id;
-    let templateVars = { shortUrl: shortUrl, longUrl: urlDatabase[shortUrl] };
-    res.render("urls_show", templateVars);
-  });
+  // app.get("/urls/:id", (req, res) => {
+  //   let shortUrl = req.params.id;
+  //   let templateVars = { shortUrl: shortUrl, longUrl: urlDatabase[shortUrl] };
+  //   res.render("urls_show", templateVars);
+  // });
 
   // DELETE
 app.post('/urls/:id/delete', function (req, res) {
@@ -77,9 +77,9 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longUrl);
 });
 
-app.get('/urls/:id/edit', function (req, res) {
-  let urlToEditId = req.params.id
-  let url = urlDatabase[urlToEditId]
+app.get('/urls/:id/', function (req, res) {
+  let urlToEditId = req.params.id;
+  let url = urlDatabase[urlToEditId];
 
   console.log("TESTING RIGHT HERE", urlToEditId, url);
 
@@ -87,19 +87,18 @@ app.get('/urls/:id/edit', function (req, res) {
     shortUrl: urlToEditId,
     url: url
   }
-
-  res.render('urls_edit', templateVars)
+  console.log("URL", url);
+  res.render('urls_show', templateVars)
 })
 
   app.post('/urls/:id', function (req, res) {
     let urlToEditId = req.params.id
-    let url = urlDatabase[urlToEditId]
+    urlDatabase[urlToEditId] = req.body.newUrl
 
     
-    // urlDatabase[urlToEditId] = req.body.shortUrl
-    console.log(urlToEditId);
+    console.log("CHECKING IF THIS IS THE URL I WANT TO REPLACE", urlToEditId);
 
-    res.redirect('/urls/' + urlToEditId)
+    res.redirect(`/urls/${urlToEditId}`)
   })
 
   app.get("/hello", (req, res) => {

@@ -9,20 +9,16 @@
     </header>
 
     <!-- Add your EJS code here -->
-    <h1>Show our Long URL: <a href="<%= longUrl %>"> <%= longUrl %> </a></h1>
-    <h1>Show our Short URL: <%= shortUrl %></h1>
+    <h1>Show our URL Key: <%= shortUrl %></h1>
+    <form method="POST" action=<%= `/urls/${shortUrl}` %>>
+      <input type=text name='newUrl' value=<%= url %>>
+      <button type=submit>Update</button>
+    </form>
+      
 
-    <ul>
-       
-        <!-- <li><%= longUrl %> and the shortened form is <%= shortUrl %> </li> -->
-       
-    </ul>
-    <ul>
-       
-       
+  
 
+    <h2><a href= '/urls'> Back to Main Page</a></h2>
 
-    </ul>
-    
 </body>
 </html>
