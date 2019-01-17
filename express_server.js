@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
    }
    res.render("urls_index", templateVars)
  } else {
-   res.redirect("/login")
+   res.render("/login")
  }
   
 });
@@ -45,6 +45,14 @@ app.get("/", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login")
 })
+
+  //remember to use req.body.username to access the username from the
+  //form we are passing in _header.ejs
+  app.post("/login", (req, res) => {
+    console.log(req.cookies);
+    res.cookie('username', req.body.username)
+    res.redirect("/urls")
+  });
 
   app.get("/urls", (req, res) => {
     let templateVars = { 
@@ -72,17 +80,24 @@ app.get("/login", (req, res) => {
     
   });
 
-  //remember to use req.body.username to access the username from the
-  //form we are passing in _header.ejs
-  app.post("/login", (req, res) => {
-    console.log(req.cookies);
-    res.cookie('username', req.body.username)
-    res.redirect("/urls")
-  });
+
 
   app.get("/urls/new", (req, res) => {
-    res.render("urls_new");
+    let templateVars = {
+      username: req.cookies["username"]
+    }
+    res.render("urls_new", templateVars);
   });
+
+  app.get("/register", (req, res) =>{
+    let templateVars = {
+      username: req.cookies["username"]
+    }
+    res.render("urls_register", templateVars)
+
+  });
+
+  
 
   // app.get("/urls/:id", (req, res) => {
   //   let shortUrl = req.params.id;
@@ -113,11 +128,13 @@ app.get('/urls/:id/', function (req, res) {
   let urlToEditId = req.params.id;
   let url = urlDatabase[urlToEditId];
 
+
   console.log("TESTING RIGHT HERE", urlToEditId, url);
 
   let templateVars = {
     shortUrl: urlToEditId,
-    url: url
+    url: url, 
+    username: req.cookies["username"]
   }
   console.log("URL", url);
   res.render('urls_show', templateVars)
@@ -126,11 +143,14 @@ app.get('/urls/:id/', function (req, res) {
   app.post('/urls/:id', function (req, res) {
     let urlToEditId = req.params.id
     urlDatabase[urlToEditId] = req.body.newUrl
+    let templateVars = {
+      username: req.cookies["username"]
+    }
 
     
     console.log("CHECKING IF THIS IS THE URL I WANT TO REPLACE", urlToEditId);
 
-    res.redirect(`/urls/${urlToEditId}`)
+    res.redirect(`/urls/${urlToEditId}`, templateVars)
   })
 
   app.get("/hello", (req, res) => {
