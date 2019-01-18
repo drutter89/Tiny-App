@@ -29,6 +29,9 @@ const users = {
   }
 };
 
+
+
+
 function generateRandomString() {
 
     let newString= Math.random().toString(32).replace('0.', '');
@@ -50,26 +53,73 @@ app.get("/", (req, res) => {
    }
    res.render("urls_index", templateVars)
  } else {
-   res.render("/login")
+   res.redirect("/urls")
  }
   
 });
 
 app.get("/login", (req, res) => {
-  res.render("login")
+  res.render("urls_login")
 })
 
   //remember to use req.body.username to access the username from the
   //form we are passing in _header.ejs
   app.post("/login", (req, res) => {
-    console.log(req.cookies);
-    res.cookie('username', req.body.username)
-    res.redirect("/urls")
-  });
+    // loop through the object to find the match for the email fist 
+    let userExists = false;
+    let email = req.body.email;
+    let password = req.body.password;
+    let userfromDb= {};
 
-  app.get("/urls", (req, res) => {
+    if (!email || !password){
+      res.status(403).send('EMAIL OR PASSWORD IS EMPTY');
+    } else {
+      // userExists = true;
+
+      for (userKey in users){
+        let user = users[userKey];
+  
+        // console.log("user", users[userKey]);
+        // console.log("email: THIS SHOULD BE THE LOG IN EMAIL", users[userKey].email);
+        // console.log("THIS IS THE USER ID", user);
+        // console.log(email); //console log the values of the emails 
+
+        if (user.email == email && user.password == password){
+          console.log("Found Email");
+          console.log("Found Password");
+          res.cookie("user_id", user.id);
+          res.redirect("/")
+
+        }
+  
+      }
+  
+
+
+      res.status(403).send('LOGGED IN')
+    }
+
+
+
+    // //
+
+
+    // console.log(req.cookies);
+    // res.cookie('username', req.body.username)
+    // res.redirect("/urls")
+  
+  });
+  
+  app.get("/urls", (req, res) => {  //change how we get cookie here
+    let userID = req.cookies.user_id
+
+    let username = undefined;
+    if (userID){
+      username = users[userID].email;
+    }
+
     let templateVars = { 
-      username: req.cookies["username"],
+      username: username, //here we are grabbing the key id of the user to pass through the object to access their email
       urls: urlDatabase 
     
     };
@@ -103,9 +153,7 @@ app.get("/login", (req, res) => {
   });
 
   app.get("/register", (req, res) =>{
-    let templateVars = {
-      email: req.cookies["email"]
-    }
+    let templateVars = users;
     res.render("urls_register", templateVars)
 
   });
@@ -122,11 +170,15 @@ app.get("/login", (req, res) => {
     };
  
 
-    res.cookie("email", req.body.email);
-    res.cookie("password", req.body.password);
+    res.cookie("user_id", id);
     console.log(users);
 
+    if (!(password || email)){
+      res.send(404);
+    } else{
+
     res.redirect("/urls");
+    }
 
   });
 
@@ -191,8 +243,8 @@ app.get('/urls/:id/', function (req, res) {
   });
 
   app.post('/logout', (req, res) => {
-    res.clearCookie('username', req.body.username)
-    res.redirect('/urls')
+    res.clearCookie('user_id');
+    res.redirect('/urls');
   });
 
 app.listen(PORT, () => {
