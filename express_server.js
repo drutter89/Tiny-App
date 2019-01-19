@@ -119,20 +119,10 @@ app.get("/login", (req, res) => {
           req.session.user_id = user.id;
 
           res.redirect("/")
-
         }
-  
       }
       res.redirect("/urls");
     }
-
-
-
-    
-
-
- 
-  
   });
   
   app.get("/urls", (req, res) => {  //change how we get cookie here
@@ -261,10 +251,6 @@ app.post('/urls/:id/delete', function (req, res) {
   }
 })
 
-
-
-
-
 app.get("/u/:shortURL", (req, res) => { 
   let longUrl = urlDatabase[req.params.shortURL];
   console.log("testing here",longUrl);
@@ -308,9 +294,6 @@ app.post('/urls/:id', function (req, res) {
     
     
   })
-
-
-
 
   app.get("/hello", (req, res) => {
     res.send("<html><body>Hello <b>World</b></body></html>\n");
