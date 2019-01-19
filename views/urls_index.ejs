@@ -15,7 +15,7 @@
 
     <ul>
         <% for (var shortUrls in urls) { %>
-            <li>Key for URL: <%= shortUrls %> and the link to the site is <a href="<%= urls[shortUrls] %>"><%= urls[shortUrls] %></a>
+            <li>Key for URL: <%= shortUrls %> and the link to the site is <a href="<%= urls[shortUrls].url %>"><%= urls[shortUrls].url %></a>
             
                 <form method="POST" action= "/urls/<%=shortUrls%>/delete"%></form>
                     <button type="submit">DELETE</button>

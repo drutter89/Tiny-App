@@ -89,6 +89,11 @@ app.get("/login", (req, res) => {
 
       for (userKey in users){
         let user = users[userKey];
+  
+        // console.log("user", users[userKey]);
+        // console.log("email: THIS SHOULD BE THE LOG IN EMAIL", users[userKey].email);
+        // console.log("THIS IS THE USER ID", user);
+        // console.log(email); //console log the values of the emails 
 
         if (user.email == email && user.password == password){
           console.log("Found Email");
@@ -114,7 +119,8 @@ app.get("/login", (req, res) => {
   });
   
   app.get("/urls", (req, res) => {  //change how we get cookie here
-    let userID = req.cookies.user_id
+    let userID = req.cookies.user_id;
+    let email = req.cookies.email;
 
     let username = undefined;
     if (userID){
@@ -217,14 +223,8 @@ app.post('/urls/:id/delete', function (req, res) {
   }
 })
 
-app.post('/urls/:id', function (req, res) {
-  let urlToEditId = req.params.id;
-  let user = req.cookies.user_id;
-  let urlObj = urlDatabase[urlToEditId];
-  urlDatabase[urlToEditId] = req.body.newUrl
-  let templateVars = {
-    username: req.cookies["username"]
-  }
+
+
 
 
 app.get("/u/:shortURL", (req, res) => { 
@@ -237,7 +237,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get('/urls/:id/', function (req, res) {
   let urlToEditId = req.params.id;
-  let url = urlDatabase[urlToEditId];
+  let url = urlDatabase[urlToEditId].url;
 
 
   console.log("TESTING RIGHT HERE", urlToEditId, url);
@@ -251,13 +251,28 @@ app.get('/urls/:id/', function (req, res) {
   res.render('urls_show', templateVars)
 })
 
+app.post('/urls/:id', function (req, res) {
+  let urlToEditId = req.params.id;
+  let user = req.cookies.user_id;
+  let urlObj = urlDatabase[urlToEditId];
+  let ownerID = urlObj["userID"];
 
+  if( user == ownerID){
 
-    
     console.log("CHECKING IF THIS IS THE URL I WANT TO REPLACE", urlToEditId);
+    urlDatabase[urlToEditId].url = req.body.newUrl;
 
-    res.redirect(`/urls/${urlToEditId}`, templateVars)
+    res.redirect(`/urls/${urlToEditId}`);
+
+  }else{
+    alert("You can't edit that, brah");
+  }
+    
+    
   })
+
+
+
 
   app.get("/hello", (req, res) => {
     res.send("<html><body>Hello <b>World</b></body></html>\n");
