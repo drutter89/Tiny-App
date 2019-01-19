@@ -12,9 +12,20 @@ app.use(cookieParser())
 app.use(morgan('dev'));
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+    "b2xVn2": {
+      userID: "userRandomID",
+      url: "http://www.lighthouselabs.ca"
+    },
+    "9sm5xK": {
+      userID: "user2RandomID",
+      url: "http://www.google.com"
+    },
+    "8ul5hU": {
+      userID: "User3RandomID",
+      url: "http://www.facebook.com"
+    }
 };
+
 
 const users = { 
   "userRandomID": {
@@ -78,11 +89,6 @@ app.get("/login", (req, res) => {
 
       for (userKey in users){
         let user = users[userKey];
-  
-        // console.log("user", users[userKey]);
-        // console.log("email: THIS SHOULD BE THE LOG IN EMAIL", users[userKey].email);
-        // console.log("THIS IS THE USER ID", user);
-        // console.log(email); //console log the values of the emails 
 
         if (user.email == email && user.password == password){
           console.log("Found Email");
@@ -93,10 +99,7 @@ app.get("/login", (req, res) => {
         }
   
       }
-  
-
-
-      res.status(403).send('LOGGED IN')
+      res.redirect("/urls");
     }
 
 
@@ -146,8 +149,13 @@ app.get("/login", (req, res) => {
 
 
   app.get("/urls/new", (req, res) => {
+    let username = req.cookies.user_id;
+
     let templateVars = {
       username: req.cookies["username"]
+    }
+    if(!username){
+      res.redirect("/login");
     }
     res.render("urls_new", templateVars);
   });
@@ -173,7 +181,7 @@ app.get("/login", (req, res) => {
     res.cookie("user_id", id);
     console.log(users);
 
-    if (!(password || email)){
+    if (!(password || !semail)){
       res.send(404);
     } else{
 
@@ -193,21 +201,39 @@ app.get("/login", (req, res) => {
   // DELETE
 app.post('/urls/:id/delete', function (req, res) {
   let urlToDeleteId = req.params.id;
+  let user = req.cookies.user_id;
+  let urlObj = urlDatabase[urlToDeleteId];
+  let ownerID = urlObj["userID"];
 
+  if (user == ownerID){
+  
   console.log("Testing IF WORKING", urlToDeleteId);
 
   delete urlDatabase[urlToDeleteId]
 
   res.redirect("/urls")
+  }else{
+    res.redirect("/login")
+  }
 })
 
-// GET THE EDIT FORM
+app.post('/urls/:id', function (req, res) {
+  let urlToEditId = req.params.id;
+  let user = req.cookies.user_id;
+  let urlObj = urlDatabase[urlToEditId];
+  urlDatabase[urlToEditId] = req.body.newUrl
+  let templateVars = {
+    username: req.cookies["username"]
+  }
+
 
 app.get("/u/:shortURL", (req, res) => { 
   let longUrl = urlDatabase[req.params.shortURL];
   console.log("testing here",longUrl);
   res.redirect(longUrl);
 });
+
+// GET THE EDIT FORM
 
 app.get('/urls/:id/', function (req, res) {
   let urlToEditId = req.params.id;
@@ -225,12 +251,7 @@ app.get('/urls/:id/', function (req, res) {
   res.render('urls_show', templateVars)
 })
 
-  app.post('/urls/:id', function (req, res) {
-    let urlToEditId = req.params.id
-    urlDatabase[urlToEditId] = req.body.newUrl
-    let templateVars = {
-      username: req.cookies["username"]
-    }
+
 
     
     console.log("CHECKING IF THIS IS THE URL I WANT TO REPLACE", urlToEditId);
