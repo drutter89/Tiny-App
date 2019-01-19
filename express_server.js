@@ -49,12 +49,12 @@ const users = {
   "userRandomID": {
     id: "userRandomID", 
     email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    password: bcrypt.hashSync("purple-monkey-dinosaur", saltRounds)
   },
  "user2RandomID": {
     id: "user2RandomID", 
     email: "user2@example.com", 
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("dishwasher-funk", saltRounds)
   }
 };
 
@@ -230,7 +230,7 @@ app.get("/login", (req, res) => {
 
     req.session.user_id = id;
     
-    // console.log(users);
+    console.log(users);
 
     if (!(password || !semail)){
       res.send(404);
