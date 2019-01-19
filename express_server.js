@@ -27,6 +27,8 @@ var urlDatabase = {
 };
 
 
+
+
 const users = { 
   "userRandomID": {
     id: "userRandomID", 
@@ -129,13 +131,40 @@ app.get("/login", (req, res) => {
 
     let templateVars = { 
       username: username, //here we are grabbing the key id of the user to pass through the object to access their email
-      urls: urlDatabase 
+      urls: urlsForUser(userID) 
     
     };
     res.render("urls_index", templateVars);
   });
 
+  function urlsForUser(userID) {
+    //returns the subset of the URL database that belongs to the user with ID id
+
+    let urlsForThatUser = {};
+
+    // over the loop, push to urlsforthatuser
+    for (urlID in urlDatabase){
+  
+      let userIdForUrl = urlDatabase[urlID].userID;
+
+
+      if(userIdForUrl == userID){
+        // urlsForThatUser.push(url.user_id);
+        urlsForThatUser[urlID] = {
+          userID: urlDatabase[urlID].userID,
+          url: urlDatabase[urlID].url
+    
+        };
+      }
+
+    }
+
+    return urlsForThatUser
+
+  }
+
   app.post("/urls", (req, res) => {
+    let userID = req.cookies.user_id;
     
     let longUrl = req.body.longUrl;
     // console.log("this is testing longurl", longUrl);
