@@ -4,6 +4,10 @@ var app = express();
 const PORT = 8080;
 const bodyParser = require("body-parser");
 var cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -97,11 +101,16 @@ app.get("/login", (req, res) => {
         // console.log("THIS IS THE USER ID", user);
         // console.log(email); //console log the values of the emails 
 
-        if (user.email == email && user.password == password){
+        if (user.email == email && bcrypt.compareSync(password, user.password)){
           console.log("Found Email");
           console.log("Found Password");
           res.cookie("user_id", user.id);
           res.redirect("/")
+
+            // if (check){
+            //   res.cookie('user_id', user)
+            //   console.log("BCRYPT CHECK",)
+            // }
 
         }
   
@@ -146,7 +155,6 @@ app.get("/login", (req, res) => {
     for (urlID in urlDatabase){
   
       let userIdForUrl = urlDatabase[urlID].userID;
-
 
       if(userIdForUrl == userID){
         // urlsForThatUser.push(url.user_id);
@@ -205,11 +213,12 @@ app.get("/login", (req, res) => {
 
     let email = req.body.email;
     let password = req.body.password;
+    let hashedPassword = bcrypt.hashSync(password, saltRounds);
     let id = generateRandomString();
     users[id] = {
       id: id, 
       email: email,
-      password: password
+      password: hashedPassword
     };
  
 
