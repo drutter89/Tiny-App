@@ -265,7 +265,7 @@ app.post('/urls/:id', function (req, res) {
     res.redirect(`/urls/${urlToEditId}`);
 
   }else{
-    alert("You can't edit that, brah");
+    res.status(404).send("You think you can just edit links around here? ONLY KANYE EDITS LINKS AROUND HERE.....please just log in first.");
   }
     
     
