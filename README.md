@@ -1,7 +1,22 @@
 # Tiny-App
-Practicing routes and redirects with EJS and Express
+Tiny App is a full stack web application built with node and express that allows users to Shorten LongUrl.
 
 
-Here is the link to access the site we've put together! https://drutter89.github.io/Tiny-App/
+## Final Product
+https://drutter89.github.io/Tiny-App/
 
 You should be able to register yourself as a user and then view a list of added urls that only you can access with a login and secured hashed password. 
+
+## Dependancies
+
+- Node.js
+- Express
+- EJS
+- bcrypt
+- body-parser
+- cookie-session
+
+## Getting Started
+- Install all dependancies (using npm install command).
+- Run the development web server using the 'node-express_server.js' command.
+
