@@ -6,10 +6,10 @@ Tiny App is a full stack web application built with node and express that allows
 
 Follow link here to get to project files https://github.com/drutter89/Tiny-App
 
-! ["This is the Home Page you'd see to start"](https://github.com/drutter89/Tiny-App/blob/master/docs/Home%20Screen.png)
-! ["This is the Register Page you'd set your name and password."](https://github.com/drutter89/Tiny-App/blob/master/docs/RegistrationPage.png)
-! ["This is the Log in Page where you'd log in with your registered User."](https://github.com/drutter89/Tiny-App/blob/master/docs/Log%20In%20Screen.png)
-! ["This is what the Urls page looks like when you're logged in."](https://github.com/drutter89/Tiny-App/blob/master/docs/Logged%20in.png)
+
+!["This is the Register Page you'd set your name and password."](https://github.com/drutter89/Tiny-App/blob/master/docs/RegistrationPage.png)
+!["This is the Log in Page where you'd log in with your registered User."](https://github.com/drutter89/Tiny-App/blob/master/docs/Log%20In%20Screen.png)
+!["This is what the Urls page looks like when you're logged in."](https://github.com/drutter89/Tiny-App/blob/master/docs/Logged%20in.png)
 
 
 
