@@ -82,7 +82,7 @@ app.get("/", (req, res) => {
    }
    res.render("urls_index", templateVars)
  } else {
-   res.redirect("/urls")
+   res.redirect("/register")
  }
   
 });
@@ -168,13 +168,17 @@ app.get("/login", (req, res) => {
   }
 
   app.post("/urls", (req, res) => {
-    let userID = req.sessions.user_id;
+    let userID = req.session.user_id;
     
     let longUrl = req.body.longUrl;
     // console.log("this is testing longurl", longUrl);
     let shortUrl = generateRandomString();
 
-    urlDatabase[shortUrl] = longUrl;
+    //remember to chat with Nima about making a change here to get Tiny App working 
+    urlDatabase[shortUrl] = {
+      url:longUrl,
+      userID:userID
+    }
     console.log(urlDatabase);
 
     console.log(req.body, req.body.longUrl);  // debug statement to see POST parameters
@@ -222,7 +226,7 @@ app.get("/login", (req, res) => {
     
     console.log(users);
 
-    if (!(password || !semail)){
+    if (!(password || !email)){
       res.send(404);
     } else{
 
