@@ -82,7 +82,7 @@ app.get("/", (req, res) => {
    }
    res.render("urls_index", templateVars)
  } else {
-   res.redirect("/register")
+   res.redirect("/urls")
  }
   
 });
@@ -210,7 +210,7 @@ app.get("/login", (req, res) => {
   });
 
   app.post("/register", (req, res) => {
-
+    
     let email = req.body.email;
     let password = req.body.password;
     let hashedPassword = bcrypt.hashSync(password, saltRounds);
@@ -266,8 +266,12 @@ app.get("/u/:shortURL", (req, res) => {
 app.get('/urls/:id/', function (req, res) {
   let urlToEditId = req.params.id;
   let url = urlDatabase[urlToEditId].url;
+  let user = req.session.user_id;
+  let urlObj = urlDatabase[urlToEditId];
+  let ownerID = urlObj["userID"];
+  if (user == ownerID){
 
-
+  
   console.log("TESTING RIGHT HERE", urlToEditId, url);
 
   let templateVars = {
@@ -277,6 +281,7 @@ app.get('/urls/:id/', function (req, res) {
   }
   console.log("URL", url);
   res.render('urls_show', templateVars)
+}
 })
 
 app.post('/urls/:id', function (req, res) {
