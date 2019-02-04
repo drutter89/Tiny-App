@@ -213,16 +213,33 @@ app.get("/login", (req, res) => {
     
     let email = req.body.email;
     let password = req.body.password;
+    if (!(password || !email)){
+      res.status(400);
+      res.send('Email or Password is blank');
+    }else {
     let hashedPassword = bcrypt.hashSync(password, saltRounds);
+    let emailExists=false;
+
+    for(let userID in users){
+      if (email === users[userID].email){
+        emailExists = true;
+      }
+    }
+    if (emailExists){
+      res.status(400);
+      res.send('This email alredy exists:');
+      
+      } else{
+    }
     let id = generateRandomString();
+    req.session.user_id = id;
     users[id] = {
       id: id, 
       email: email,
       password: hashedPassword
     };
- 
+  
 
-    req.session.user_id = id;
     
     console.log(users);
 
@@ -232,7 +249,7 @@ app.get("/login", (req, res) => {
 
     res.redirect("/urls");
     }
-
+  }
   });
 
 
